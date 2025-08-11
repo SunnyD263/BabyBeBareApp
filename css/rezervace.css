@@ -1,0 +1,27 @@
+/* Styl tabulky */
+table {
+    width: auto; /* Umožňuje tabulce přizpůsobit šířku obsahu */
+    max-width: 100%; /* Zabrání tomu, aby tabulka přesáhla šířku rodičovského prvku */
+    border-collapse: collapse; /* Odstraní mezery mezi buňkami */
+    margin-top: 20px;
+    table-layout: auto; /* Automatická šířka sloupců podle obsahu */
+}
+
+th, td {
+    padding: 8px; /* Vymezení prostoru kolem textu */
+    border: 1px solid #ddd;
+    text-align: center;
+    vertical-align: middle; /* Vertikální zarovnání textu uprostřed */
+    white-space: nowrap; /* Zamezí zalamování textu */
+    overflow: hidden; /* Skryje text, který přesahuje velikost buňky */
+    text-overflow: ellipsis; /* Zobrazí tři tečky, pokud text přesahuje */
+}
+
+th {
+    background-color: #f4f4f4;
+}
+
+/* Volitelné: Změna stylu checkboxů pro lepší vzhled */
+input[type="checkbox"] {
+    margin: 0;
+}

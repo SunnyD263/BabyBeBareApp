@@ -1,0 +1,100 @@
+/* Nastavení stylu pro hlavní nadpis aplikace */
+header h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+/* Styl pro chybovou zprávu */
+.ErrorMsg {
+    color: red;
+    font-weight: bold;
+}
+
+/* Styl pro úspěšnou zprávu */
+.DoneMsg {
+    color: green;
+    font-weight: bold;
+}
+
+/* Styl pro varovnou zprávu */
+.WarningMsg {
+    color: orange;
+    font-weight: bold;
+}
+
+/* Styl pro tabulku a její buňky */
+table {
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    border: 2px solid #ddd;
+    table-layout: auto; /* Automatická šířka podle obsahu */
+}
+
+th, td {
+    border: 2px solid #ddd;
+    font-size: 12px;
+    padding: 3px;
+    text-align: left;
+    width: auto; /* Přizpůsobí šířku obsahu */
+}
+
+/* Styl pro tlačítka v tabulce */
+button {
+    padding: 5px 10px;
+    background-color: #000000;
+    color: rgb(250, 250, 250);
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+/* Styl pro hlavní div obsahující dvě tabulky vedle sebe */
+.TWOtable {
+    display: flex;
+    justify-content: space-between;
+}
+
+.TWOtableColumn {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.TWOtableColumn:last-child {
+    margin-right: 0;
+}
+
+@media print {
+    .header {
+        display: none;
+    }
+    header {
+      display: none;
+    }
+    #DeleteID {
+      display: none;
+    }
+  }
+
+  fieldset {
+    max-width: 100%;
+  }
+  
+  fieldset legend {
+    display: inline-block;
+    font-size: 16px; 
+    font-weight: bold;
+  }
+  
+  fieldset label {
+    width: 150px;
+    font-size: 15px; 
+    display: inline-block;
+  }
+  
+  fieldset input {
+    width: 200px;
+    font-size: 14px; 
+  }
+
+
+
