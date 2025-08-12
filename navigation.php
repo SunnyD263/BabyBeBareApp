@@ -3,22 +3,22 @@
         <li>
             <a href="#">Rezervace</a>
             <ul>
-                <li><a href="/app/rezervace/import.php">Přehled rezervací</a></li>
-                <li><a href="/app/rezervace/setup.php">Nastavení rezervaci</a></li>
+                <li><a href="/BabyBeBareApp/rezervace/import.php">Přehled rezervací</a></li>
+                <li><a href="/BabyBeBareApp/rezervace/setup.php">Nastavení rezervaci</a></li>
             </ul>
         </li>
         <li><a href="#">Invenutra</a>
             <ul>
-                <li><a href="/app/inv/import.php">Import skladové zásoby</a></li>
-                <li><a href="/app/inv/scan.php">Skenování</a></li>
-                <li><a href="/app/inv/compare.php">Porovnání</a></li>
+                <li><a href="/BabyBeBareApp/inv/import.php">Import skladové zásoby</a></li>
+                <li><a href="/BabyBeBareApp/inv/scan.php">Skenování</a></li>
+                <li><a href="/BabyBeBareApp/inv/compare.php">Porovnání</a></li>
             </ul>
         </li>
         <li><a href="#">Feed</a>
             <ul>
                 <li><a href="#" onclick="postBaagl(); return false;">Baagl na Shoptet</a></li>
-                <li><a href="/app/feed/baagl/inbound.php">Naskladnění na Shoptet</a></li>
-                <li><a href="/app/feed/baagl/missing.php">Dohrání produktu</a></li>
+                <li><a href="/BabyBeBareApp/feed/baagl/inbound.php">Naskladnění na Shoptet</a></li>
+                <li><a href="/BabyBeBareApp/feed/baagl/missing.php">Dohrání produktu</a></li>
             </ul>
         </li>
         <!-- <li>
@@ -60,15 +60,15 @@
   function postBaagl() {
     const form = document.createElement('form');
     form.method = 'POST';
-    form.action = '/app/feed/baagl/baagl.php';
+    form.action = '/BabyBeBareApp/feed/baagl/baagl.php';
 
     const input = document.createElement('input');
     input.type = 'hidden';
     input.name = 'source';
     input.value = 'import';
-    form.appendChild(input);
+    form.BabyBeBareAppendChild(input);
 
-    document.body.appendChild(form);
+    document.body.BabyBeBareAppendChild(form);
     form.submit();
   }
 </script>
