@@ -16,9 +16,11 @@
         </li>
         <li><a href="#">Feed</a>
             <ul>
-                <li><a href="#" onclick="postBaagl(); return false;">Baagl na Shoptet</a></li>
+                <li><a href="#" id="baagl-shoptet" data-source="import">Baagl na Shoptet</a></li>
+                <li><a href="#" id="update-shoptet" data-source="update">Aktualizace Shoptet</a></li>
                 <li><a href="/BabyBeBareApp/feed/baagl/inbound.php">Naskladnění na Shoptet</a></li>
                 <li><a href="/BabyBeBareApp/feed/baagl/missing.php">Dohrání produktu</a></li>
+                <li><a href="/BabyBeBareApp/feed/baagl/price_convertor.php">Změna cen</a></li>
             </ul>
         </li>
         <!-- <li>
@@ -57,18 +59,35 @@
     </ul>
 </nav>
 <script>
-  function postBaagl() {
-    const form = document.createElement('form');
+window.postBaagl = function postBaagl(sourceValue) {
+  let form = document.getElementById('baagl-post-form');
+  if (!form) {
+    form = document.createElement('form');
+    form.id = 'baagl-post-form';
     form.method = 'POST';
     form.action = '/BabyBeBareApp/feed/baagl/baagl.php';
 
     const input = document.createElement('input');
     input.type = 'hidden';
     input.name = 'source';
-    input.value = 'import';
-    form.BabyBeBareAppendChild(input);
+    form.appendChild(input);
 
-    document.body.BabyBeBareAppendChild(form);
-    form.submit();
+    document.body.appendChild(form);
   }
+
+  // nastavíme aktuální hodnotu podle kliknutého odkazu
+  form.querySelector('input[name="source"]').value = sourceValue;
+
+  form.submit();
+};
+
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('#baagl-shoptet, #update-shoptet').forEach(link => {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      const source = this.getAttribute('data-source');
+      window.postBaagl(source);
+    });
+  });
+});
 </script>

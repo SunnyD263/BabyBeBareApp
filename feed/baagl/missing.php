@@ -17,7 +17,7 @@
         <h1>BabyBeBare App</h1>
         <?php require '../../navigation.php'; ?>
     </header>
-<form id="autoPostForm" action="/app/feed/baagl/baagl.php" method="post" style="display: none;">
+<form id="autoPostForm" action="/BabyBeBareApp/feed/baagl/baagl.php" method="post" style="display: none;">
     <input type="hidden" name="source" value="missing">
 </form>
 <script>

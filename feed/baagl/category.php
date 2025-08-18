@@ -129,6 +129,7 @@ switch ($extId) {
     case 127:  //Notesy, kalendáře, diáře &gt; Diáře &gt; Týdenní diáře (1x Notesy, kalendáře, diáře &gt; Ostatní)
     switch (true) {
         case mb_stripos($name, 'týdenní') !== false:
+        case mb_stripos($name, 'Zábavný kalendář Kateřiny Winterové') !== false:
             $sortId = 1;
             break;
         case mb_stripos($name, 'návlek') !== false:

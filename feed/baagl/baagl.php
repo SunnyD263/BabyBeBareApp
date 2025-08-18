@@ -34,6 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $url = 'https://xml.pg.cz/cs/token/PIdQAFfp3RWHs3BkHryIOpfE3bftFkqR';
         $xml = simplexml_load_file($url);
         break;
+    case 'update':
+        $sendConstant = 'Baagl_update';
+        $url = 'https://xml.pg.cz/cs/nesklad/token/PIdQAFfp3RWHs3BkHryIOpfE3bftFkqR';
+        $xml = simplexml_load_file($url);
+        break;
     case 'missing' :
         $url = 'https://xml.pg.cz/cs/nesklad/token/PIdQAFfp3RWHs3BkHryIOpfE3bftFkqR';
         $xmlContent = file_get_contents($url);
@@ -222,9 +227,13 @@ file_put_contents($logFile, '');
                 $dph=0;
         }
 
+if(isset($priceConvert) == false) {
+$priceConvert = 1.45;
+}
+
 //$productPrices = getPrice($item->nakupni_cena,$dph, $priceConvert);
 
-$cena = ceil((float)str_replace(',', '.', (string)$item->nakupni_cena) * 1.45);
+$cena = round((float)str_replace(',', '.', (string)$item->nakupni_cena) * 1.45,0);
 $logLine = date('Y-m-d H:i:s') . " | Zboží - " . (string)$item->nazev .
            " Cena - " . $cena .
            " => Doporučená cena - " . (string)$item->dmoc_cena  . PHP_EOL;
@@ -287,8 +296,8 @@ file_put_contents($logFile, $logLine, FILE_APPEND);
 };
 echo "Import " . $counter . " položek dokončen.<br>";
 unset($allowedIds,$Connection,$dph,$category,$createTableSQL,$dropTableSQL,$images,
-      $skupinaCheck,$counter,$url,$xml,$result,$query,$params,$raw,$skupina,$title,$cena,
-      $obr,$item,$ignoredRegNums,$extId,$skupiny_zbozi,$blacklistSkupin,$regnum,$missId);
+      $skupinaCheck,$counter,$url,$xml,$result,$query,$params,$raw,$skupina,$title,$cena,$logFile, $logLine,
+      $obr,$item,$ignoredRegNums,$extId,$skupiny_zbozi,$blacklistSkupin,$regnum,$missId,$priceConvert,$suffix);
 
 ?>
 
