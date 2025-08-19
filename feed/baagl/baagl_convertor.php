@@ -82,8 +82,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         break;
                     }
                 }
-                $whId = 0;
-                $changes = false;
+                if(isset($onlyUpdate)) {
+                    if((float)$shoptetData->STOCK->WAREHOUSES->WAREHOUSE[1]->VALUE == (float)$row["stav"]){
+                        continue;
+                    }                    
+                }
                 $shortDescription = get_promo($company,(string)$shoptetData->NAME,(string)$shoptetData->CATEGORIES->CATEGORY);
                     $item = $xml->addChild('SHOPITEM');
                     $item->addChild('NAME', htmlspecialchars($shoptetData->NAME));
@@ -175,7 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     } else {
                         $item->addChild('PURCHASE_PRICE', htmlspecialchars($shoptetData->PURCHASE_PRICE));
                     }
-
+                    $whId=0;
                     $stock = $item->addChild('STOCK');
                     $warehouses = $stock->addChild('WAREHOUSES');
                     foreach ($shoptetData->STOCK->WAREHOUSES->WAREHOUSE as $whItem) {

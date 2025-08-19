@@ -18,7 +18,6 @@
         <img src="images/logo.jpg" class="responsive"/>
     </header> 
 <?php 
-session_start();
-if (isset($_SESSION)) {session_destroy();}
+if (isset($_SESSION)) {session_destroy();} else {@session_start();}
 ?>
 </body>
