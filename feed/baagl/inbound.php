@@ -52,15 +52,23 @@ if (!empty($_FILES['html_file']['tmp_name'])) {
         $code = (string)mb_strtoupper($matches[1]);
         $name = $matches[2];
 
-        $purchaseText = trim($cells->item(1)->nodeValue);
-        $purchaseValue = 0.0;
-        $purchaseCurrency = '';
+        $withoutVatPriceText = trim($cells->item(1)->nodeValue);
+        $withoutVatPrice = 0.0;
+        $withoutVatCurrency = '';
 
-        if (preg_match('/^([\d\s]+,\d{2})\s*([^\d\s]+)$/u', $purchaseText, $match)) {
-            $purchaseValue  = (float) str_replace([',', ' '], ['.', ''], $match[1]);
-            $purchaseCurrency= $match[2];
+        if (preg_match('/^([\d\s]+,\d{2})\s*([^\d\s]+)$/u', $withoutVatPriceText, $match)) {
+            $withoutVatPrice  = (float) str_replace([',', ' '], ['.', ''], $match[1]);
+            $withoutVatCurrency= $match[2];
         }
 
+        $priceVatText = trim($cells->item(2)->nodeValue);
+        $priceVat = 0.0;
+        $priceVatCurrency = '';
+
+        if (preg_match('/^([\d\s]+,\d{2})\s*([^\d\s]+)$/u', $priceVatText, $match)) {
+            $priceVat = (float) str_replace([',', ' '], ['.', ''], $match[1]);
+            $priceVatCurrency = $match[2];
+        }
 
         $qtyText = trim($cells->item(3)->nodeValue);
         $qtyValue = 0;
@@ -78,13 +86,12 @@ if (!empty($_FILES['html_file']['tmp_name'])) {
             $tax = (int) str_replace(' ', '', $match[1]);
         }
 
-        $priceText = trim($cells->item(5)->nodeValue);
-        $priceValue = 0.0;
-        $priceCurrency = '';
+        $priceVatSumtText = trim($cells->item(5)->nodeValue);
+        $priceVatSum = 0.0;
+        $priceVatSumCurrency = '';
 
-        if (preg_match('/^([\d\s]+,\d{2})\s*([^\d\s]+)$/u', $priceText, $match)) {
-            $priceValue = (float) str_replace([',', ' '], ['.', ''], $match[1]);
-            $priceCurrency = $match[2];
+        if (preg_match('/^([\d\s]+,\d{2})\s*([^\d\s]+)$/u', $priceVatSumtText, $match)) {
+            $priceVatSum = (float) str_replace([',', ' '], ['.', ''], $match[1]);
         }
 
         $items[] = [
@@ -92,14 +99,17 @@ if (!empty($_FILES['html_file']['tmp_name'])) {
             'name' => $name,
             'uom' => $qtyUom,
             'quantity' => $qtyValue,
-            'currency' => $priceCurrency,            
-            'price' => $priceValue,
-            'purchase' =>  $purchaseValue * ((100+$tax) /100)
+            'currency' => $priceVatCurrency,            
+            'withoutVatPrice' => $withoutVatPrice,
+            'tax' => $tax,
+            'priceVat' =>  $priceVat,
+            'priceVatSum' => $priceVatSum
+
 
         ];
 
         $sumQuantity += $qtyValue;
-        $sumPrice += $priceValue;
+        $sumPrice += $priceVatSum;
         $counter++;
     }
 
@@ -116,8 +126,8 @@ $createTableSQL =
     uom VARCHAR(10),
     stav INT,
     mena VARCHAR(10),
-    cena DECIMAL(10,2),
-    nakupni_cena DECIMAL(10,2)
+    nakupBezDph DECIMAL(10,2),
+    nakupDph DECIMAL(10,2)
 )";
 
 $Connection->execute($dropTableSQL);
@@ -130,12 +140,12 @@ foreach ($items as $item) {
         (string)$item["uom"],
         (int)$item["quantity"],
         (string) $item["currency"],
-        (float)$item["price"],
-        (float)$item["purchase"]
+        (float)$item["withoutVatPrice"],
+        (float)$item["priceVat"]
 
     ];
 
-    $query = "INSERT INTO baagl_inbound (code, nazev, uom, stav, mena, cena, nakupni_cena) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $query = "INSERT INTO baagl_inbound (code, nazev, uom, stav, mena, nakupBezDph, nakupDph) VALUES (?, ?, ?, ?, ?, ?, ?)";
     $result = $Connection->execute($query, $params);
 };
 
@@ -153,11 +163,11 @@ foreach ($items as $item) {
     echo "<div id='orderDetails' style='display:none; margin-top: 10px;'>";
     echo "<table border='1' cellpadding='5'>";
     echo "<tr>";
-    echo "<th>Kód</th><th>Název</th><th>Počet</th><th>UOM</th><th>Nákup s DPH</th><th>Prodej s DPH</th><th>Měna</th>";
+    echo "<th>Kód</th><th>Název</th><th>Počet</th><th>UOM</th><th>Nákup bez DPH</th><th>DPH</th><th>Nákup s DPH</th><th>Celkem s DPH</th><th>Měna</th>";
     echo "</tr>";
 
     foreach ($items as $item) {
-        echo "<tr><td>{$item['code']}</td><td>{$item['name']}</td><td>{$item['quantity']}</td><td>{$item['uom']}</td><td>" . number_format($item['purchase'], 2, ',', ' ') . "</td><td>" . number_format($item['price'], 2, ',', ' ') . "</td><td>{$item['currency']}</td></tr>";
+        echo "<tr><td>{$item['code']}</td><td>{$item['name']}</td><td>{$item['quantity']}</td><td>{$item['uom']}</td><td>" . number_format($item['withoutVatPrice'], 2, ',', ' ') . "</td><td>{$item['tax']}</td><td>" . number_format($item['priceVat'], 2, ',', ' ') . "</td><td>" . number_format($item['priceVatSum'], 2, ',', ' ') . "</td><td>{$item['currency']}</td></tr>";
     }
 
     echo "<tr><td></td><td><strong>Součet</strong></td><td><strong>$sumQuantity</strong></td><td></td><td><strong>" . number_format($sumPrice, 2, ',', ' ') . "</strong></td><td></td></tr>";

@@ -33,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'Baagl_inbound':
             $stmt = $Connection->select("SELECT * FROM `baagl_inbound`");
             $targetWH = "Výchozí sklad";
+            $onlyInbound = true;
             break;
         case 'Baagl_update':
             $stmt = $Connection->select("SELECT * FROM `baagl`");
@@ -82,6 +83,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         break;
                     }
                 }
+
+                //Dokud nebude evidence pohybů
                 if(isset($onlyUpdate)) {
                     if((float)$shoptetData->STOCK->WAREHOUSES->WAREHOUSE[1]->VALUE == (float)$row["stav"]){
                         continue;
@@ -165,18 +168,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     $item->addChild('CURRENCY', htmlspecialchars($shoptetData->CURRENCY));
                     $item->addChild('VAT', htmlspecialchars($shoptetData->VAT));
-                    
-                    if ((float)$shoptetData->STANDARD_PRICE !== (float)$row['cena']) {
-                        $item->addChild('STANDARD_PRICE', htmlspecialchars((float)$row['cena']));                    
-                        $item->addChild('PRICE_VAT', htmlspecialchars((float)$row['cena']));
-                    } else {
-                        $item->addChild('PRICE_VAT', htmlspecialchars($shoptetData->PRICE_VAT));
-                        $item->addChild('STANDARD_PRICE', htmlspecialchars($shoptetData->PRICE_VAT));
-                    }
-                    if ((float)$shoptetData->PURCHASE_PRICE !== (float)$row['nakupni_cena']) {
-                        $item->addChild('PURCHASE_PRICE', htmlspecialchars((float)$row['nakupni_cena']));
-                    } else {
-                        $item->addChild('PURCHASE_PRICE', htmlspecialchars($shoptetData->PURCHASE_PRICE));
+                    if(isset($onlyInbound) == false){
+                        if ((float)$shoptetData->STANDARD_PRICE !== (float)$row['cena']) {
+                            $item->addChild('STANDARD_PRICE', htmlspecialchars((float)$row['cena']));                    
+                            $item->addChild('PRICE_VAT', htmlspecialchars((float)$row['cena']));
+                        } else {
+                            $item->addChild('PRICE_VAT', htmlspecialchars($shoptetData->PRICE_VAT));
+                            $item->addChild('STANDARD_PRICE', htmlspecialchars($shoptetData->PRICE_VAT));
+                        }
+                        if ((float)$shoptetData->PURCHASE_PRICE !== (float)$row['nakupni_cena']) {
+                            $item->addChild('PURCHASE_PRICE', htmlspecialchars((float)$row['nakupni_cena']));
+                        } else {
+                            $item->addChild('PURCHASE_PRICE', htmlspecialchars($shoptetData->PURCHASE_PRICE));
+                        }
                     }
                     $whId=0;
                     $stock = $item->addChild('STOCK');
@@ -394,7 +398,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo "Feed neobsahoval žádné záznamy nebo se špatně naimportoval na SQL server.<br>";
     }
 unset($Connection,$code,$company,$count,$counter,$counterNew,$counterUpd,$http_response_header,$outputPath,
-$row,$shoptetCODEs,$shoptetData,$shoptet_xml,$stmt,$url,$xml,$onlyUpdate);
+$row,$shoptetCODEs,$shoptetData,$shoptet_xml,$stmt,$url,$xml,$onlyUpdate,$onlyInbound);
 }
 ?>
 </body>
