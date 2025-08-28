@@ -477,6 +477,12 @@ switch ($extId) {
         case mb_stripos($name, 'sáček') !== false:
             $sortId = 3;
             break;
+        case mb_stripos($name, 'Školní aktovka Ergo Minecraft Blue') !== false:
+            $sortId = 4;
+            break;
+        case mb_stripos($name, 'Školní penál jednopatrový Minecraft Blue') !== false:
+            $sortId = 5;
+            break;
     }
     break;
 

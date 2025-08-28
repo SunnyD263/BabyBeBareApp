@@ -85,11 +85,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 //Dokud nebude evidence pohybů
-                if(isset($onlyUpdate)) {
-                    if((float)$shoptetData->STOCK->WAREHOUSES->WAREHOUSE[1]->VALUE == (float)$row["stav"]){
-                        continue;
-                    }                    
-                }
+                // if(isset($onlyUpdate)) {
+                //     if((float)$shoptetData->STOCK->WAREHOUSES->WAREHOUSE[1]->VALUE == (float)$row["stav"]){
+                //         continue;
+                //     }                    
+                // }
                 $shortDescription = get_promo($company,(string)$shoptetData->NAME,(string)$shoptetData->CATEGORIES->CATEGORY);
                     $item = $xml->addChild('SHOPITEM');
                     $item->addChild('NAME', htmlspecialchars($shoptetData->NAME));
@@ -170,11 +170,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $item->addChild('VAT', htmlspecialchars($shoptetData->VAT));
                     if(isset($onlyInbound) == false){
                         if ((float)$shoptetData->STANDARD_PRICE !== (float)$row['cena']) {
-                            $item->addChild('STANDARD_PRICE', htmlspecialchars((float)$row['cena']));                    
                             $item->addChild('PRICE_VAT', htmlspecialchars((float)$row['cena']));
+                            $item->addChild('STANDARD_PRICE', htmlspecialchars((float)$row['cena']));
+                            /*  
+                            Bez DPH
+                            $item->addChild('PRICE', htmlspecialchars($shoptetData->PRICE));
+                            $item->addChild('STANDARD_PRICE', htmlspecialchars($shoptetData->PRICE)); 
+                            */
                         } else {
+                            
                             $item->addChild('PRICE_VAT', htmlspecialchars($shoptetData->PRICE_VAT));
                             $item->addChild('STANDARD_PRICE', htmlspecialchars($shoptetData->PRICE_VAT));
+                            /*  
+                            Bez DPH
+                            $item->addChild('PRICE', htmlspecialchars($shoptetData->PRICE));
+                            $item->addChild('STANDARD_PRICE', htmlspecialchars($shoptetData->PRICE)); 
+                            */
                         }
                         if ((float)$shoptetData->PURCHASE_PRICE !== (float)$row['nakupni_cena']) {
                             $item->addChild('PURCHASE_PRICE', htmlspecialchars((float)$row['nakupni_cena']));
@@ -333,6 +344,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $item->addChild('CURRENCY', $row['mena']);
                 $item->addChild('VAT', $row['dph']);
+                //Bez DPH - $item->addChild('PRICE', $row['cena']);
                 $item->addChild('PRICE_VAT', $row['cena']);
                 $item->addChild('PURCHASE_PRICE', $row['nakupni_cena']);
                 $item->addChild('STANDARD_PRICE', $row['cena']);

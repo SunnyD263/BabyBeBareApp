@@ -227,13 +227,22 @@ file_put_contents($logFile, '');
                 $dph=0;
         }
 
-if(isset($priceConvert) == false) {
-$priceConvert = 1.45;
-}
 
-//$productPrices = getPrice($item->nakupni_cena,$dph, $priceConvert);
+$priceConvert = 1.55;
 
-$cena = round((float)str_replace(',', '.', (string)$item->nakupni_cena) * 1.45,0);
+
+// $productPrices = getPrice($item->nakupni_cena,$dph, $priceConvert);
+$cena = round((float)$item->nakupni_cena * $priceConvert,0);
+
+// Cena bez DPH
+/* // původní nákupní cena (s DPH)
+$cenaSDph = (float) str_replace(',', '.', (string) $item->nakupni_cena);
+
+// výpočet ceny bez DPH
+(float) $cenaBezDph = $cenaSDph / (1 + ($dph / 100));
+
+// přepočet kurzem a zaokrouhlení
+$cena = round((float)$cenaBezDph * $priceConvert, 4); */
 $logLine = date('Y-m-d H:i:s') . " | Zboží - " . (string)$item->nazev .
            " Cena - " . $cena .
            " => Doporučená cena - " . (string)$item->dmoc_cena  . PHP_EOL;

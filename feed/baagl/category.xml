@@ -10,6 +10,14 @@
     </CATEGORY>
     <CATEGORY>
         <COMPANY>Baagl</COMPANY>
+        <NAME>Školní potřeby &gt; Aktovky</NAME>
+        <GROUP_ID>39</GROUP_ID>
+        <EXT_ID>173</EXT_ID>
+        <SORT_ID>4</SORT_ID>
+        <SHOPTET_ID>1159</SHOPTET_ID>
+    </CATEGORY>
+    <CATEGORY>
+        <COMPANY>Baagl</COMPANY>
         <NAME>Školní potřeby &gt; Batohy &gt; Školní batohy</NAME>
         <GROUP_ID>4</GROUP_ID>
         <EXT_ID>160</EXT_ID>
@@ -110,6 +118,14 @@
         <GROUP_ID>4</GROUP_ID>
         <EXT_ID>163</EXT_ID>
         <SORT_ID>1</SORT_ID>
+        <SHOPTET_ID>1297</SHOPTET_ID>
+    </CATEGORY>
+    <CATEGORY>
+        <COMPANY>Baagl</COMPANY>
+        <NAME>Školní potřeby &gt; Penály &gt; Školní penály jednopatrový</NAME>
+        <GROUP_ID>4</GROUP_ID>
+        <EXT_ID>173</EXT_ID>
+        <SORT_ID>5</SORT_ID>
         <SHOPTET_ID>1297</SHOPTET_ID>
     </CATEGORY>
     <CATEGORY>
