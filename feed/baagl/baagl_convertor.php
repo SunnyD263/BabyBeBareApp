@@ -75,6 +75,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($stmt['rows'] as $row) {
             $code = $row["code"];
 
+            // if($code == 'A-34070' ){
+            //     echo "tady";
+            // }
+
             if (in_array($code, $shoptetCODEs)) {
                 foreach ($shoptet_xml->SHOPITEM as $shopItem) {
                     if ((string)$shopItem->CODE == $code) {
@@ -135,7 +139,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $info_parameter->addChild('VALUE', $info->VALUE);
                         }
                     }
-                    $item->addChild('VISIBILITY', htmlspecialchars($shoptetData->VISIBILITY));
                     $item->addChild('SEO_TITLE', htmlspecialchars($shoptetData->SEO_TITLE));
                     $item->addChild('ALLOWS_IPLATBA', $shoptetData->ALLOWS_IPLATBA);
                     $item->addChild('ALLOWS_PAY_ONLINE', $shoptetData->ALLOWS_PAY_ONLINE);
@@ -194,19 +197,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         }
                     }
                     $whId=0;
+                    $amountOtherWH = 0;
                     $stock = $item->addChild('STOCK');
                     $warehouses = $stock->addChild('WAREHOUSES');
                     foreach ($shoptetData->STOCK->WAREHOUSES->WAREHOUSE as $whItem) {
                         $warehouse = $warehouses->addChild('WAREHOUSE');
                         $warehouse->addChild('NAME',htmlspecialchars($whItem->NAME));
                         if($targetWH == $whItem->NAME) {
-                            if ($whItem->NAME = 'Výchozí sklad' && $targetWH == 'Výchozí sklad' ) {
+                            if (isset($onlyInbound)) {
                                 $warehouse->addChild('VALUE',$shoptetData->STOCK->WAREHOUSES->WAREHOUSE[$whId]->VALUE + $row['stav']); 
+                                $amountCentralWH = (int) $shoptetData->STOCK->WAREHOUSES->WAREHOUSE[$whId]->VALUE + (int) $row['stav'];
                             } else {
-                                $warehouse->addChild('VALUE', $row['stav']); 
+                                $warehouse->addChild('VALUE', $row['stav']);
+
+                                if ($whItem->NAME == 'Výchozí sklad'){
+                                    $amountCentralWH = (int)$row['stav'];
+                                } else {
+                                    $amountOtherWH = (int)$row['stav'] + $amountOtherWH;
+                                }   
                             }
                         } else {
-                            $warehouse->addChild('VALUE',$shoptetData->STOCK->WAREHOUSES->WAREHOUSE[$whId]->VALUE);              
+                            $warehouse->addChild('VALUE',$shoptetData->STOCK->WAREHOUSES->WAREHOUSE[$whId]->VALUE);
+
+                            if ($whItem->NAME == 'Výchozí sklad'){
+                                $amountCentralWH = (int)$shoptetData->STOCK->WAREHOUSES->WAREHOUSE[$whId]->VALUE;
+                            } else {
+                                $amountOtherWH = (int)$shoptetData->STOCK->WAREHOUSES->WAREHOUSE[$whId]->VALUE + $amountOtherWH;
+                            }              
                         }
                         $warehouse->addChild('LOCATION',htmlspecialchars($whItem->LOCATION)); // prázdné
                         $whId++;
@@ -214,21 +231,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     $stock->addChild('MINIMAL_AMOUNT',htmlspecialchars($shoptetData->STOCK->MINIMAL_AMOUNT));
                     $stock->addChild('MAXIMAL_AMOUNT',htmlspecialchars($shoptetData->STOCK->MAXIMAL_AMOUNT));
-                    if ($targetWH == 'Výchozí sklad'){
-                        $amountCentralWH = (int)$row['stav'] + (int)$shoptetData->STOCK->WAREHOUSES->WAREHOUSE[0]->VALUE;
-                    } else {
-                        $amountCentralWH = (int)$shoptetData->STOCK->WAREHOUSES->WAREHOUSE[0]->VALUE; 
-                    }
 
                     if ($amountCentralWH > 0 ){
                         $item->addChild('AVAILABILITY_IN_STOCK', 'Skladem na prodejně');            
-                        } else {
+                    } else {
                         $item->addChild('AVAILABILITY_IN_STOCK', 'Skladem ve skladu e-shopu');
-                        }
-
+                    }
 
                     $item->addChild('AVAILABILITY_OUT_OF_STOCK', 'Momentálně nedostupné');
-                    $item->addChild('VISIBLE', $shoptetData->VISIBLE);
+                    if (($amountCentralWH + $amountOtherWH) > 0) {
+                       $item->addChild('VISIBILITY', htmlspecialchars('visible'));
+                    } else {
+                       $item->addChild('VISIBILITY', htmlspecialchars('hidden'));
+                    }
+                    $item->addChild('VISIBLE', 1 );
                     $item->addChild('PRODUCT_NUMBER', htmlspecialchars($shoptetData->PRODUCT_NUMBER));
                     $item->addChild('FIRMY_CZ', $shoptetData->FIRMY_CZ);
                     $item->addChild('HEUREKA_HIDDEN', $shoptetData->HEUREKA_HIDDEN);
@@ -249,7 +265,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $item->addChild('APPLY_DISCOUNT_COUPON', $shoptetData->APPLY_DISCOUNT_COUPON);
                     $counterUpd++;
 
-                unset($amountCentralWH,$atypical,$categories,$category,$defaultCategory,$i,$images,$info,$info_parameter,$code,
+                unset($amountCentralWH,$amountOtherWH,$atypical,$categories,$category,$defaultCategory,$i,$images,$info,$info_parameter,$code,
                 $info_parameters,$item,$key,$logistic,$shopItem,$shoptetData,$stock,$unit,$whId, $warehouse,$warehouseItem,$warehouses,$whItem);
                 }
 
