@@ -126,8 +126,8 @@ $createTableSQL =
     uom VARCHAR(10),
     stav INT,
     mena VARCHAR(10),
-    nakupBezDph DECIMAL(10,2),
-    nakupDph DECIMAL(10,2)
+    nakup_bez_dph DECIMAL(10,2),
+    nakup_dph DECIMAL(10,2)
 )";
 
 $Connection->execute($dropTableSQL);
@@ -145,7 +145,7 @@ foreach ($items as $item) {
 
     ];
 
-    $query = "INSERT INTO baagl_inbound (code, nazev, uom, stav, mena, nakupBezDph, nakupDph) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $query = "INSERT INTO baagl_inbound (code, nazev, uom, stav, mena, nakup_bez_dph, nakup_dph) VALUES (?, ?, ?, ?, ?, ?, ?)";
     $result = $Connection->execute($query, $params);
 };
 
