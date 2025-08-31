@@ -125,6 +125,7 @@ $createTableSQL =
     nazev TEXT,
     uom VARCHAR(10),
     stav INT,
+    tax INT,
     mena VARCHAR(10),
     nakup_bez_dph DECIMAL(10,2),
     nakup_dph DECIMAL(10,2)
@@ -139,13 +140,14 @@ foreach ($items as $item) {
         (string)$item["name"],
         (string)$item["uom"],
         (int)$item["quantity"],
+        (int)$item["tax"],
         (string) $item["currency"],
         (float)$item["withoutVatPrice"],
         (float)$item["priceVat"]
 
     ];
 
-    $query = "INSERT INTO baagl_inbound (code, nazev, uom, stav, mena, nakup_bez_dph, nakup_dph) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $query = "INSERT INTO baagl_inbound (code, nazev, uom, stav, tax, mena, nakup_bez_dph, nakup_dph) VALUES (?, ?,?, ?, ?, ?, ?, ?)";
     $result = $Connection->execute($query, $params);
 };
 
