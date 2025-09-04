@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($stmt['rows'] as $row) {
             $code = $row["code"];
 
-            // if($code == 'A-34070' ){
+            // if($code == 'A-34179' ){
             //     echo "tady";
             // }
 
@@ -239,7 +239,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
 
                     $item->addChild('AVAILABILITY_OUT_OF_STOCK', 'Momentálně nedostupné');
-                    if (($amountCentralWH + $amountOtherWH) > 0) {
+                    // if (($amountCentralWH + $amountOtherWH) > 0) {
+                    if (($amountCentralWH) > 0) {
                        $item->addChild('VISIBILITY', htmlspecialchars('visible'));
                     } else {
                        $item->addChild('VISIBILITY', htmlspecialchars('hidden'));

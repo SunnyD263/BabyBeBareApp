@@ -96,7 +96,7 @@ file_put_contents($logFile, '');
         id INT AUTO_INCREMENT PRIMARY KEY,
         skupinaID VARCHAR(50),
         skupina VARCHAR(50),
-        skupinaZbozi VARCHAR(50),
+        skupina_zbozi VARCHAR(50),
         code VARCHAR (20),
         catId VARCHAR(50),
         catName VARCHAR(255),
@@ -214,8 +214,6 @@ file_put_contents($logFile, '');
             continue;
         }
 
-       
-
         switch($item->dph){
             case 'high': 
                 $dph=21;
@@ -288,7 +286,7 @@ file_put_contents($logFile, $logLine, FILE_APPEND);
         $query = "
         INSERT INTO baagl (
             skupinaID, skupina,
-            skupinaZbozi,code, catId, catName, ean, nazev, popis, sirka, vyska, hloubka,
+            skupina_zbozi,code, catId, catName, ean, nazev, popis, sirka, vyska, hloubka,
             barva, baleni, material, hmotnost, nosnost, uom,
             stav, stav_po_doplneni, dph, mena, cena,
             nakupni_cena, dmoc_cena, sleva,
